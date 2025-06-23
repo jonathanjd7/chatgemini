@@ -207,6 +207,7 @@ body {
     justify-content: space-between;
     align-items: center;
     box-shadow: var(--shadow);
+    position: relative;
 }
 
 .header-info h1 {
@@ -239,6 +240,49 @@ body {
 .btn-secondary:hover {
     background: var(--bg-color);
     color: var(--text-primary);
+}
+
+.chat-notification {
+    position: absolute;
+    top: 100%;
+    left: 1.5rem;
+    right: 1.5rem;
+    padding: 0.75rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    z-index: 1000;
+    animation: slideDown 0.3s ease;
+    box-shadow: var(--shadow);
+}
+
+.chat-notification.success {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--success-color);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.chat-notification.error {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--error-color);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.chat-notification.info {
+    background: rgba(102, 126, 234, 0.1);
+    color: var(--primary-color);
+    border: 1px solid rgba(102, 126, 234, 0.2);
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* ===== MENSAJES ===== */
@@ -322,6 +366,115 @@ body {
     color: var(--text-secondary);
     margin-top: 0.25rem;
     opacity: 0.7;
+}
+
+/* ===== EDICIÓN DE MENSAJES ===== */
+.message-actions {
+    display: flex;
+    gap: 0.25rem;
+    margin-top: 0.5rem;
+    opacity: 0;
+    transition: var(--transition);
+}
+
+.message-container:hover .message-actions {
+    opacity: 1;
+}
+
+.edit-btn {
+    background: none;
+    border: none;
+    padding: 0.25rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: var(--transition);
+    opacity: 0.6;
+}
+
+.edit-btn:hover {
+    background: rgba(0, 0, 0, 0.1);
+    opacity: 1;
+}
+
+.message-container.user .edit-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.edit-container {
+    margin-top: 0.5rem;
+}
+
+.edit-textarea {
+    width: 100%;
+    min-height: 60px;
+    padding: 0.5rem;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    resize: vertical;
+    transition: var(--transition);
+    background: var(--surface-color);
+}
+
+.edit-textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+}
+
+.edit-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.save-btn, .cancel-btn, .resend-btn {
+    padding: 0.4rem 0.8rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.save-btn {
+    background: var(--success-color);
+    color: white;
+}
+
+.save-btn:hover {
+    background: #059669;
+    transform: translateY(-1px);
+}
+
+.resend-btn {
+    background: var(--primary-color);
+    color: white;
+}
+
+.resend-btn:hover {
+    background: #5a67d8;
+    transform: translateY(-1px);
+}
+
+.cancel-btn {
+    background: var(--error-color);
+    color: white;
+}
+
+.cancel-btn:hover {
+    background: #dc2626;
+    transform: translateY(-1px);
+}
+
+.edited-indicator {
+    font-style: italic;
+    color: var(--text-secondary);
+    font-size: 0.7rem;
 }
 
 /* ===== TYPING INDICATOR ===== */
@@ -489,6 +642,18 @@ body {
         flex-direction: column;
         gap: 0.25rem;
         align-items: flex-start;
+    }
+    
+    /* Edición de mensajes en móvil */
+    .edit-actions {
+        flex-direction: column;
+        gap: 0.4rem;
+    }
+    
+    .save-btn, .cancel-btn, .resend-btn {
+        width: 100%;
+        padding: 0.6rem;
+        font-size: 0.9rem;
     }
 }
 

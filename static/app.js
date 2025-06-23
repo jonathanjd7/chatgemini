@@ -224,9 +224,15 @@ async function handleSendMessage(e) {
     messageInput.focus();
 }
 
-function addMessage(content, sender, isError = false) {
+function addMessage(content, sender, isError = false, messageId = null) {
     const messageContainer = document.createElement('div');
     messageContainer.className = `message-container ${sender}`;
+    
+    // Generar ID único para el mensaje si no se proporciona
+    if (!messageId) {
+        messageId = 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    }
+    messageContainer.setAttribute('data-message-id', messageId);
     
     const avatar = document.createElement('div');
     avatar.className = sender === 'user' ? 'user-avatar' : 'bot-avatar';
@@ -240,9 +246,28 @@ function addMessage(content, sender, isError = false) {
         messageContent.style.borderLeft = '4px solid #dc2626';
     }
     
+    // Contenido del mensaje
+    const messageText = document.createElement('div');
+    messageText.className = 'message-text';
     // Convertir saltos de línea a <br>
     const formattedContent = content.replace(/\n/g, '<br>');
-    messageContent.innerHTML = `<p>${formattedContent}</p>`;
+    messageText.innerHTML = `<p>${formattedContent}</p>`;
+    messageContent.appendChild(messageText);
+    
+    // Botones de acción (solo para mensajes del usuario)
+    if (sender === 'user' && !isError) {
+        const actionsContainer = document.createElement('div');
+        actionsContainer.className = 'message-actions';
+        
+        const editBtn = document.createElement('button');
+        editBtn.className = 'edit-btn';
+        editBtn.innerHTML = '✏️';
+        editBtn.title = 'Editar mensaje';
+        editBtn.onclick = () => startEditMessage(messageId);
+        
+        actionsContainer.appendChild(editBtn);
+        messageContent.appendChild(actionsContainer);
+    }
     
     // Timestamp
     const timestamp = document.createElement('div');
@@ -255,6 +280,8 @@ function addMessage(content, sender, isError = false) {
     
     chatMessages.appendChild(messageContainer);
     scrollToBottom();
+    
+    return messageId;
 }
 
 function showTypingIndicator() {
@@ -285,6 +312,151 @@ function clearChatMessages() {
     if (welcomeMessage) {
         chatMessages.appendChild(welcomeMessage);
     }
+}
+
+// ===== FUNCIONES DE EDICIÓN DE MENSAJES =====
+function startEditMessage(messageId) {
+    const messageContainer = document.querySelector(`[data-message-id="${messageId}"]`);
+    if (!messageContainer) return;
+    
+    const messageText = messageContainer.querySelector('.message-text');
+    const messageActions = messageContainer.querySelector('.message-actions');
+    
+    // Obtener texto original (sin formateo HTML)
+    const originalText = messageText.querySelector('p').innerHTML.replace(/<br>/g, '\n');
+    
+    // Crear textarea para edición
+    const editContainer = document.createElement('div');
+    editContainer.className = 'edit-container';
+    
+    const textarea = document.createElement('textarea');
+    textarea.className = 'edit-textarea';
+    textarea.value = originalText;
+    textarea.rows = Math.min(Math.max(originalText.split('\n').length, 2), 8);
+    
+    const editActions = document.createElement('div');
+    editActions.className = 'edit-actions';
+    
+    const saveBtn = document.createElement('button');
+    saveBtn.className = 'save-btn';
+    saveBtn.innerHTML = '💾 Guardar';
+    saveBtn.onclick = () => saveEditMessage(messageId, textarea.value);
+    
+    const cancelBtn = document.createElement('button');
+    cancelBtn.className = 'cancel-btn';
+    cancelBtn.innerHTML = '❌ Cancelar';
+    cancelBtn.onclick = () => cancelEditMessage(messageId);
+    
+    const resendBtn = document.createElement('button');
+    resendBtn.className = 'resend-btn';
+    resendBtn.innerHTML = '🔄 Guardar y Re-enviar';
+    resendBtn.onclick = () => saveAndResendMessage(messageId, textarea.value);
+    
+    editActions.appendChild(saveBtn);
+    editActions.appendChild(resendBtn);
+    editActions.appendChild(cancelBtn);
+    
+    editContainer.appendChild(textarea);
+    editContainer.appendChild(editActions);
+    
+    // Ocultar texto original y acciones
+    messageText.style.display = 'none';
+    messageActions.style.display = 'none';
+    
+    // Agregar editor
+    messageContainer.querySelector('.message-content').insertBefore(editContainer, messageActions);
+    
+    // Enfocar textarea
+    textarea.focus();
+    textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+}
+
+function cancelEditMessage(messageId) {
+    const messageContainer = document.querySelector(`[data-message-id="${messageId}"]`);
+    if (!messageContainer) return;
+    
+    const editContainer = messageContainer.querySelector('.edit-container');
+    const messageText = messageContainer.querySelector('.message-text');
+    const messageActions = messageContainer.querySelector('.message-actions');
+    
+    // Remover editor
+    editContainer.remove();
+    
+    // Mostrar contenido original
+    messageText.style.display = 'block';
+    messageActions.style.display = 'flex';
+}
+
+function saveEditMessage(messageId, newText) {
+    const messageContainer = document.querySelector(`[data-message-id="${messageId}"]`);
+    if (!messageContainer) return;
+    
+    const editContainer = messageContainer.querySelector('.edit-container');
+    const messageText = messageContainer.querySelector('.message-text');
+    const messageActions = messageContainer.querySelector('.message-actions');
+    const timestamp = messageContainer.querySelector('.message-timestamp');
+    
+    // Actualizar contenido
+    const formattedContent = newText.replace(/\n/g, '<br>');
+    messageText.innerHTML = `<p>${formattedContent}</p>`;
+    
+    // Agregar indicador de edición
+    if (!messageContainer.querySelector('.edited-indicator')) {
+        const editedIndicator = document.createElement('span');
+        editedIndicator.className = 'edited-indicator';
+        editedIndicator.textContent = ' (editado)';
+        timestamp.appendChild(editedIndicator);
+    }
+    
+    // Remover editor
+    editContainer.remove();
+    
+    // Mostrar contenido actualizado
+    messageText.style.display = 'block';
+    messageActions.style.display = 'flex';
+    
+    showChatNotification('Mensaje editado correctamente', 'success');
+}
+
+async function saveAndResendMessage(messageId, newText) {
+    const messageContainer = document.querySelector(`[data-message-id="${messageId}"]`);
+    if (!messageContainer) return;
+    
+    // Guardar los cambios primero
+    saveEditMessage(messageId, newText);
+    
+    // Encontrar y eliminar respuesta anterior de la IA (si existe)
+    let nextElement = messageContainer.nextElementSibling;
+    while (nextElement && nextElement.classList.contains('message-container')) {
+        if (nextElement.classList.contains('bot')) {
+            nextElement.remove();
+            break;
+        }
+        nextElement = nextElement.nextElementSibling;
+    }
+    
+    // Deshabilitar input
+    setInputDisabled(true);
+    
+    // Mostrar indicador de escritura
+    showTypingIndicator();
+    
+    // Re-enviar mensaje
+    const result = await sendMessage(newText);
+    
+    // Ocultar indicador de escritura
+    hideTypingIndicator();
+    
+    if (result.success) {
+        // Mostrar nueva respuesta de Gemini
+        addMessage(result.aiResponse, 'bot');
+    } else {
+        // Mostrar error
+        addMessage(`Error: ${result.error}`, 'bot', true);
+    }
+    
+    // Rehabilitar input
+    setInputDisabled(false);
 }
 
 // ===== FUNCIONES DE UI =====
@@ -330,6 +502,30 @@ function clearMessage() {
     authMessage.textContent = '';
 }
 
+function showChatNotification(message, type = 'info') {
+    // Remover notificación anterior si existe
+    const existingNotification = document.querySelector('.chat-notification');
+    if (existingNotification) {
+        existingNotification.remove();
+    }
+    
+    // Crear nueva notificación
+    const notification = document.createElement('div');
+    notification.className = `chat-notification ${type}`;
+    notification.textContent = message;
+    
+    // Agregar al chat panel
+    const chatHeader = document.querySelector('.chat-header');
+    chatHeader.appendChild(notification);
+    
+    // Auto-remover después de 3 segundos
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.remove();
+        }
+    }, 3000);
+}
+
 function setButtonLoading(button, loading) {
     if (loading) {
         button.classList.add('loading');
@@ -359,14 +555,16 @@ function updateCharCount() {
 
 function handleKeyDown(e) {
     if (e.key === 'Enter') {
-        if (e.ctrlKey || e.metaKey) {
-            // Ctrl+Enter o Cmd+Enter para enviar
+        if (e.shiftKey) {
+            // Shift+Enter para nueva línea (comportamiento por defecto)
+            return;
+        } else {
+            // Enter simple para enviar
             e.preventDefault();
             if (!sendBtn.disabled) {
                 document.getElementById('chat-form').dispatchEvent(new Event('submit'));
             }
         }
-        // Enter normal para nueva línea (comportamiento por defecto)
     }
 }
 
