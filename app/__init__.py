@@ -1,6 +1,6 @@
-from flask import Flask
+from flask import Flask, render_template, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from flask_jwt_extended import JWTManager
+from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity
 from flask_migrate import Migrate
 from flask_cors import CORS
 from app.config import Config
@@ -20,6 +20,12 @@ def create_app(config_class=Config):
     jwt.init_app(app)
     migrate.init_app(app, db)
     CORS(app)
+    
+    # Ruta principal
+    @app.route('/')
+    def index():
+        return render_template('index.html')
+    
     
     # Registrar blueprints
     from app.routes.auth import auth_bp

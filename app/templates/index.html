@@ -66,58 +66,72 @@
 
     <!-- Panel Principal de Chat -->
     <div id="chat-panel" class="chat-panel hidden">
-        <!-- Header del Chat -->
-        <div class="chat-header">
-            <div class="header-info">
-                <h1>🤖 Gemini Chat</h1>
-                <span id="user-email" class="user-info"></span>
+        <!-- Sidebar de Conversaciones -->
+        <div class="conversations-sidebar" id="conversations-sidebar">
+            <div class="sidebar-header">
+                <h3>💬 Conversaciones</h3>
+                <button id="new-conversation" class="btn-new-conversation">➕ Nueva</button>
             </div>
-            <div class="header-actions">
-                <button id="clear-chat" class="btn-secondary">🗑️ Limpiar</button>
-                <button id="logout-btn" class="btn-secondary">🚪 Salir</button>
+            <div id="conversations-list" class="conversations-list">
+                <!-- Las conversaciones se cargarán aquí dinámicamente -->
             </div>
+            <!-- Handle de redimensionamiento -->
+            <div class="resize-handle" id="resize-handle"></div>
         </div>
 
-        <!-- Area de Mensajes -->
-        <div id="chat-messages" class="chat-messages">
-            <div class="welcome-message">
-                <div class="bot-avatar">🤖</div>
-                <div class="message-content">
-                    <p>¡Hola! Soy tu asistente de IA powered by Google Gemini.</p>
-                    <p>¿En qué puedo ayudarte hoy?</p>
+        <!-- Area Principal de Chat -->
+        <div class="chat-main">
+            <!-- Header del Chat -->
+            <div class="chat-header">
+                <div class="header-info">
+                    <h1>🤖 Gemini Chat</h1>
+                    <span id="user-email" class="user-info"></span>
                 </div>
-            </div>
-        </div>
-
-        <!-- Indicador de Escritura -->
-        <div id="typing-indicator" class="typing-indicator hidden">
-            <div class="bot-avatar">🤖</div>
-            <div class="typing-dots">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-            <span class="typing-text">Gemini está escribiendo...</span>
-        </div>
-
-        <!-- Area de Entrada -->
-        <div class="chat-input-area">
-            <form id="chat-form" class="chat-form">
-                <div class="input-container">
-                    <textarea 
-                        id="message-input" 
-                        placeholder="Escribe tu mensaje aquí..." 
-                        rows="1"
-                        maxlength="5000"></textarea>
-                    <button type="submit" id="send-btn" class="send-button">
-                        <span class="send-icon">📤</span>
+                <div class="header-actions">
+                    <button id="theme-toggle" class="btn-secondary" title="Cambiar modo oscuro/claro">
+                        <span class="theme-icon">🌙</span>
+                        <span class="theme-text">Modo Oscuro</span>
                     </button>
+                    <button id="clear-chat" class="btn-secondary">🗑️ Limpiar</button>
+                    <button id="logout-btn" class="btn-secondary">🚪 Salir</button>
                 </div>
-                <div class="input-info">
-                    <span class="char-count">0/5000</span>
-                    <span class="shortcut-hint">Presiona Enter para enviar, Shift+Enter para nueva línea</span>
+            </div>
+
+            <!-- Area de Mensajes -->
+            <div id="chat-messages" class="chat-messages">
+                <!-- Los mensajes se cargarán aquí dinámicamente -->
+            </div>
+
+            <!-- Indicador de Escritura -->
+            <div id="typing-indicator" class="typing-indicator hidden">
+                <div class="bot-avatar">🤖</div>
+                <div class="typing-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
                 </div>
-            </form>
+                <span class="typing-text">Gemini está escribiendo...</span>
+            </div>
+
+            <!-- Area de Entrada -->
+            <div class="chat-input-area">
+                <form id="chat-form" class="chat-form">
+                    <div class="input-container">
+                        <textarea 
+                            id="message-input" 
+                            placeholder="Escribe tu mensaje aquí..." 
+                            rows="1"
+                            maxlength="5000"></textarea>
+                        <button type="submit" id="send-btn" class="send-button">
+                            <span class="send-icon">📤</span>
+                        </button>
+                    </div>
+                    <div class="input-info">
+                        <span class="char-count">0/5000</span>
+                        <span class="shortcut-hint">Presiona Enter para enviar, Shift+Enter para nueva línea</span>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 

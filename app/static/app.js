@@ -2,6 +2,8 @@
 const API_BASE_URL = '';
 let currentToken = null;
 let currentUser = null;
+let currentConversation = null;
+let conversations = [];
 
 // ===== ELEMENTOS DEL DOM =====
 const authPanel = document.getElementById('auth-panel');
@@ -30,6 +32,12 @@ function initializeApp() {
     
     // Auto-resize del textarea
     setupTextareaAutoResize();
+    
+    // Configurar redimensionamiento del sidebar
+    setupSidebarResize();
+    
+    // Configurar modo oscuro
+    setupThemeToggle();
 }
 
 function setupEventListeners() {
@@ -45,6 +53,8 @@ function setupEventListeners() {
     // Botones
     document.getElementById('logout-btn').addEventListener('click', handleLogout);
     document.getElementById('clear-chat').addEventListener('click', handleClearChat);
+    document.getElementById('new-conversation').addEventListener('click', handleNewConversation);
+    document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
 }
 
 // ===== FUNCIONES DE AUTENTICACIÓN =====
@@ -59,7 +69,7 @@ async function handleLogin(e) {
     clearMessage();
     
     try {
-        const response = await fetch('/auth/login', {
+        const response = await fetch('/api/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -79,7 +89,10 @@ async function handleLogin(e) {
             localStorage.setItem('gemini_chat_user', JSON.stringify(currentUser));
             
             showMessage('¡Login exitoso! Bienvenido al chat.', 'success');
-            setTimeout(() => showChatPanel(), 1000);
+            setTimeout(() => {
+                showChatPanel();
+                loadConversations();
+            }, 1000);
         } else {
             showMessage(data.error || 'Error al iniciar sesión', 'error');
         }
@@ -102,7 +115,7 @@ async function handleRegister(e) {
     clearMessage();
     
     try {
-        const response = await fetch('/auth/register', {
+        const response = await fetch('/api/auth/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -132,6 +145,8 @@ async function handleRegister(e) {
 function handleLogout() {
     currentToken = null;
     currentUser = null;
+    currentConversation = null;
+    conversations = [];
     localStorage.removeItem('gemini_chat_token');
     localStorage.removeItem('gemini_chat_user');
     
@@ -140,16 +155,130 @@ function handleLogout() {
     showMessage('Sesión cerrada correctamente', 'success');
 }
 
+// ===== FUNCIONES DE CONVERSACIONES =====
+async function loadConversations() {
+    if (!currentToken) return;
+    
+    try {
+        const response = await fetch('/api/chat/conversations', {
+            headers: {
+                'Authorization': `Bearer ${currentToken}`
+            }
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            conversations = data.conversations;
+            renderConversationsList();
+            
+            // Si hay conversaciones, cargar la primera
+            if (conversations.length > 0) {
+                await selectConversation(conversations[0].id);
+            } else {
+                // Si no hay conversaciones, crear una nueva
+                await createNewConversation();
+            }
+        } else {
+            console.error('Error loading conversations');
+        }
+    } catch (error) {
+        console.error('Error loading conversations:', error);
+    }
+}
+
+async function createNewConversation() {
+    if (!currentToken) return;
+    
+    try {
+        const response = await fetch('/api/chat/conversations', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${currentToken}`
+            },
+            body: JSON.stringify({ title: 'Nueva Conversación' })
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            currentConversation = data.conversation;
+            conversations.unshift(currentConversation);
+            renderConversationsList();
+            clearChatMessages();
+            showWelcomeMessage();
+        }
+    } catch (error) {
+        console.error('Error creating conversation:', error);
+    }
+}
+
+async function selectConversation(conversationId) {
+    if (!currentToken) return;
+    
+    try {
+        // Cargar mensajes de la conversación
+        const response = await fetch(`/api/chat/conversations/${conversationId}/messages`, {
+            headers: {
+                'Authorization': `Bearer ${currentToken}`
+            }
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            currentConversation = conversations.find(c => c.id === conversationId);
+            
+            // Limpiar chat y mostrar mensajes
+            clearChatMessages();
+            showWelcomeMessage();
+            
+            // Mostrar mensajes existentes
+            data.messages.forEach(message => {
+                addMessage(message.content, message.role === 'user' ? 'user' : 'bot', false, message.id);
+            });
+            
+            // Actualizar UI
+            renderConversationsList();
+        }
+    } catch (error) {
+        console.error('Error loading conversation:', error);
+    }
+}
+
+async function deleteConversation(conversationId) {
+    if (!currentToken || !confirm('¿Estás seguro de que quieres eliminar esta conversación?')) return;
+    
+    try {
+        const response = await fetch(`/api/chat/conversations/${conversationId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${currentToken}`
+            }
+        });
+        
+        if (response.ok) {
+            conversations = conversations.filter(c => c.id !== conversationId);
+            renderConversationsList();
+            
+            // Si eliminamos la conversación actual, crear una nueva
+            if (currentConversation && currentConversation.id === conversationId) {
+                await createNewConversation();
+            }
+        }
+    } catch (error) {
+        console.error('Error deleting conversation:', error);
+    }
+}
+
 // ===== FUNCIONES DE CHAT =====
 async function sendMessage(messageText) {
-    if (!currentToken) {
-        showMessage('Sesión expirada. Por favor, inicia sesión nuevamente.', 'error');
-        handleLogout();
-        return;
+    if (!currentToken || !currentConversation) {
+        showMessage('No hay conversación activa. Creando una nueva...', 'warning');
+        await createNewConversation();
+        if (!currentConversation) return { success: false, error: 'No se pudo crear conversación' };
     }
     
     try {
-        const response = await fetch('/chat/send', {
+        const response = await fetch(`/api/chat/conversations/${currentConversation.id}/messages`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -164,8 +293,9 @@ async function sendMessage(messageText) {
             return {
                 success: true,
                 userMessage: data.user_message,
-                aiResponse: data.gemini_response,
-                timestamp: data.timestamp
+                aiResponse: data.ai_response,
+                conversationUpdated: data.conversation_updated || null,
+                timestamp: new Date().toISOString()
             };
         } else {
             if (response.status === 401 || response.status === 422) {
@@ -184,6 +314,10 @@ async function sendMessage(messageText) {
             error: 'Error de conexión'
         };
     }
+}
+
+async function handleNewConversation() {
+    await createNewConversation();
 }
 
 async function handleSendMessage(e) {
@@ -213,7 +347,18 @@ async function handleSendMessage(e) {
     
     if (result.success) {
         // Mostrar respuesta de Gemini
-        addMessage(result.aiResponse, 'bot');
+        addMessage(result.aiResponse.content, 'bot');
+        
+        // Si la conversación fue actualizada con nuevo título, actualizar en el frontend
+        if (result.conversationUpdated) {
+            currentConversation = result.conversationUpdated;
+            // Actualizar en la lista de conversaciones
+            const index = conversations.findIndex(c => c.id === currentConversation.id);
+            if (index !== -1) {
+                conversations[index] = currentConversation;
+                renderConversationsList();
+            }
+        }
     } else {
         // Mostrar error
         addMessage(`Error: ${result.error}`, 'bot', true);
@@ -306,12 +451,7 @@ function handleClearChat() {
 }
 
 function clearChatMessages() {
-    // Mantener solo el mensaje de bienvenida
-    const welcomeMessage = chatMessages.querySelector('.welcome-message');
     chatMessages.innerHTML = '';
-    if (welcomeMessage) {
-        chatMessages.appendChild(welcomeMessage);
-    }
 }
 
 // ===== FUNCIONES DE EDICIÓN DE MENSAJES =====
@@ -449,7 +589,18 @@ async function saveAndResendMessage(messageId, newText) {
     
     if (result.success) {
         // Mostrar nueva respuesta de Gemini
-        addMessage(result.aiResponse, 'bot');
+        addMessage(result.aiResponse.content, 'bot');
+        
+        // Si la conversación fue actualizada con nuevo título, actualizar en el frontend
+        if (result.conversationUpdated) {
+            currentConversation = result.conversationUpdated;
+            // Actualizar en la lista de conversaciones
+            const index = conversations.findIndex(c => c.id === currentConversation.id);
+            if (index !== -1) {
+                conversations[index] = currentConversation;
+                renderConversationsList();
+            }
+        }
     } else {
         // Mostrar error
         addMessage(`Error: ${result.error}`, 'bot', true);
@@ -608,9 +759,206 @@ async function verifyToken() {
     }
 }
 
+function showWelcomeMessage() {
+    const welcomeMessage = document.createElement('div');
+    welcomeMessage.className = 'welcome-message';
+    welcomeMessage.innerHTML = `
+        <div class="bot-avatar">🤖</div>
+        <div class="message-content">
+            <p>¡Hola! Soy tu asistente de IA powered by Google Gemini.</p>
+            <p>¿En qué puedo ayudarte hoy?</p>
+        </div>
+    `;
+    chatMessages.appendChild(welcomeMessage);
+}
+
+function renderConversationsList() {
+    const conversationsList = document.getElementById('conversations-list');
+    if (!conversationsList) return;
+    
+    conversationsList.innerHTML = '';
+    
+    conversations.forEach(conversation => {
+        const conversationElement = document.createElement('div');
+        conversationElement.className = `conversation-item ${currentConversation && currentConversation.id === conversation.id ? 'active' : ''}`;
+        
+        conversationElement.innerHTML = `
+            <div class="conversation-info" onclick="selectConversation(${conversation.id})">
+                <div class="conversation-title">${conversation.title}</div>
+                <div class="conversation-date">${new Date(conversation.updated_at).toLocaleDateString()}</div>
+            </div>
+            <button class="delete-conversation" onclick="event.stopPropagation(); deleteConversation(${conversation.id})">🗑️</button>
+        `;
+        
+        conversationsList.appendChild(conversationElement);
+    });
+}
+
+// ===== FUNCIONES DE REDIMENSIONAMIENTO DEL SIDEBAR =====
+function setupSidebarResize() {
+    const sidebar = document.getElementById('conversations-sidebar');
+    const handle = document.getElementById('resize-handle');
+    
+    if (!sidebar || !handle) return;
+    
+    // Cargar ancho guardado del localStorage
+    const savedWidth = localStorage.getItem('sidebar_width');
+    if (savedWidth) {
+        sidebar.style.width = savedWidth + 'px';
+    }
+    
+    let isResizing = false;
+    let startX = 0;
+    let startWidth = 0;
+    
+    // Iniciar redimensionamiento
+    handle.addEventListener('mousedown', (e) => {
+        isResizing = true;
+        startX = e.clientX;
+        startWidth = parseInt(document.defaultView.getComputedStyle(sidebar).width, 10);
+        
+        sidebar.classList.add('resizing');
+        handle.classList.add('resizing');
+        
+        // Prevenir selección de texto
+        document.body.style.userSelect = 'none';
+        document.body.style.webkitUserSelect = 'none';
+        document.body.style.cursor = 'col-resize';
+        
+        e.preventDefault();
+    });
+    
+    // Manejar redimensionamiento
+    document.addEventListener('mousemove', (e) => {
+        if (!isResizing) return;
+        
+        const width = startWidth + e.clientX - startX;
+        const minWidth = 200;
+        const maxWidth = 500;
+        
+        // Limitar el ancho dentro de los rangos permitidos
+        if (width >= minWidth && width <= maxWidth) {
+            sidebar.style.width = width + 'px';
+        }
+        
+        e.preventDefault();
+    });
+    
+    // Finalizar redimensionamiento
+    document.addEventListener('mouseup', () => {
+        if (isResizing) {
+            isResizing = false;
+            
+            sidebar.classList.remove('resizing');
+            handle.classList.remove('resizing');
+            
+            // Restaurar selección de texto
+            document.body.style.userSelect = '';
+            document.body.style.webkitUserSelect = '';
+            document.body.style.cursor = '';
+            
+            // Guardar ancho en localStorage
+            const currentWidth = parseInt(document.defaultView.getComputedStyle(sidebar).width, 10);
+            localStorage.setItem('sidebar_width', currentWidth);
+        }
+    });
+    
+    // También manejar cuando el mouse sale de la ventana
+    document.addEventListener('mouseleave', () => {
+        if (isResizing) {
+            isResizing = false;
+            
+            sidebar.classList.remove('resizing');
+            handle.classList.remove('resizing');
+            
+            document.body.style.userSelect = '';
+            document.body.style.webkitUserSelect = '';
+            document.body.style.cursor = '';
+            
+            // Guardar ancho en localStorage
+            const currentWidth = parseInt(document.defaultView.getComputedStyle(sidebar).width, 10);
+            localStorage.setItem('sidebar_width', currentWidth);
+        }
+    });
+}
+
+// ===== FUNCIONES DE MODO OSCURO =====
+function setupThemeToggle() {
+    // Cargar tema guardado o detectar preferencia del sistema
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+    
+    // Aplicar tema inicial
+    applyTheme(initialTheme);
+    updateThemeButton(initialTheme);
+    
+    // Escuchar cambios en la preferencia del sistema
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        if (!localStorage.getItem('theme')) {
+            const newTheme = e.matches ? 'dark' : 'light';
+            applyTheme(newTheme);
+            updateThemeButton(newTheme);
+        }
+    });
+}
+
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    
+    // Aplicar nuevo tema
+    applyTheme(newTheme);
+    updateThemeButton(newTheme);
+    
+    // Guardar preferencia
+    localStorage.setItem('theme', newTheme);
+    
+    // Mostrar notificación
+    const themeText = newTheme === 'dark' ? 'modo oscuro' : 'modo claro';
+    showChatNotification(`Cambiado a ${themeText}`, 'info');
+}
+
+function applyTheme(theme) {
+    // Aplicar atributo data-theme al documento
+    document.documentElement.setAttribute('data-theme', theme);
+    
+    // Agregar/remover clase para transiciones suaves
+    document.body.classList.add('theme-transitioning');
+    
+    // Remover clase después de la transición
+    setTimeout(() => {
+        document.body.classList.remove('theme-transitioning');
+    }, 300);
+}
+
+function updateThemeButton(theme) {
+    const themeButton = document.getElementById('theme-toggle');
+    const themeIcon = themeButton.querySelector('.theme-icon');
+    const themeText = themeButton.querySelector('.theme-text');
+    
+    if (theme === 'dark') {
+        themeIcon.textContent = '☀️';
+        themeText.textContent = 'Modo Claro';
+        themeButton.title = 'Cambiar a modo claro';
+    } else {
+        themeIcon.textContent = '🌙';
+        themeText.textContent = 'Modo Oscuro';
+        themeButton.title = 'Cambiar a modo oscuro';
+    }
+}
+
+function getCurrentTheme() {
+    return document.documentElement.getAttribute('data-theme') || 'light';
+}
+
 // ===== FUNCIONES GLOBALES PARA EL HTML =====
+// Hacer funciones globales para poder llamarlas desde HTML
+window.selectConversation = selectConversation;
+window.deleteConversation = deleteConversation;
 window.showLogin = showLogin;
 window.showRegister = showRegister;
+window.toggleTheme = toggleTheme;
 
 // ===== DEBUG (solo en desarrollo) =====
 if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {

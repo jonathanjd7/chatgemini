@@ -3,32 +3,18 @@ import re
 
 class UserRegistrationSchema(Schema):
     """Esquema para validar registro de usuario"""
-    username = fields.Str(required=True, validate=[
-        validate.Length(min=3, max=80),
-        validate.Regexp(r'^[a-zA-Z0-9_]+$', error='Username can only contain letters, numbers and underscores')
-    ])
     email = fields.Email(required=True, validate=validate.Length(max=120))
     password = fields.Str(required=True, validate=validate.Length(min=6, max=100))
-    confirm_password = fields.Str(required=True)
     
     @validates('password')
     def validate_password(self, value):
         """Validar fortaleza de contraseña"""
-        if not re.search(r'[A-Za-z]', value):
-            raise ValidationError('Password must contain at least one letter')
-        if not re.search(r'[0-9]', value):
-            raise ValidationError('Password must contain at least one number')
-    
-    def validate_passwords_match(self, data, **kwargs):
-        """Validar que las contraseñas coincidan"""
-        if 'password' in data and 'confirm_password' in data:
-            if data['password'] != data['confirm_password']:
-                raise ValidationError({'confirm_password': ['Passwords must match']})
-        return data
+        if len(value) < 6:
+            raise ValidationError('Password must be at least 6 characters long')
 
 class UserLoginSchema(Schema):
     """Esquema para validar login de usuario"""
-    username = fields.Str(required=True, validate=validate.Length(min=1, max=80))
+    email = fields.Email(required=True, validate=validate.Length(max=120))
     password = fields.Str(required=True, validate=validate.Length(min=1, max=100))
 
 class ConversationSchema(Schema):
@@ -51,7 +37,5 @@ class UserUpdateSchema(Schema):
     @validates('new_password')
     def validate_new_password(self, value):
         """Validar fortaleza de nueva contraseña"""
-        if not re.search(r'[A-Za-z]', value):
-            raise ValidationError('Password must contain at least one letter')
-        if not re.search(r'[0-9]', value):
-            raise ValidationError('Password must contain at least one number') 
+        if len(value) < 6:
+            raise ValidationError('Password must be at least 6 characters long') 
