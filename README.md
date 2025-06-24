@@ -1,38 +1,80 @@
-# 🤖 Flask Gemini Chat
+# 🤖 Flask Gemini Chat - Versión Avanzada
 
-Una aplicación web completa de chat con **Google Gemini AI**, construida con Flask y una interfaz moderna. Incluye autenticación JWT, gestión de conversaciones persistentes y una interfaz de usuario intuitiva.
+Una aplicación web completa de chat con **Google Gemini AI**, construida con Flask y una interfaz moderna. Incluye autenticación JWT, gestión de múltiples conversaciones, títulos automáticos inteligentes, modo oscuro completo y una interfaz de usuario altamente optimizada.
 
 ![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
 ![Flask](https://img.shields.io/badge/Flask-2.3+-green.svg)
-![Gemini](https://img.shields.io/badge/Google_Gemini-AI-orange.svg)
+![Gemini](https://img.shields.io/badge/Google_Gemini-1.5_Flash-orange.svg)
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg)
 
 ## ✨ Características Principales
 
-- 🔐 **Autenticación completa** con JWT (registro, login, refresh tokens)
-- 💬 **Chat inteligente** con Google Gemini AI (modelos 1.5-flash, 1.5-pro, 1.0-pro)
-- 📱 **Interfaz moderna** y responsive con HTML5, CSS3 y JavaScript
-- 🗄️ **Base de datos persistente** con SQLAlchemy (SQLite, PostgreSQL, MySQL)
-- 🔒 **Seguridad robusta** con validación de datos y hasheo de contraseñas
-- 📊 **Gestión de conversaciones** con historial completo
-- 🎨 **UI/UX atractiva** con animaciones y feedback visual
-- ⚡ **Auto-configuración** con scripts inteligentes
-- 🔧 **Multi-entorno** (desarrollo, producción, testing)
+### 🎯 **Funcionalidades Avanzadas**
+- 🔐 **Autenticación completa** con JWT (registro, login, tokens seguros)
+- 💬 **Chat inteligente** con Google Gemini AI 1.5-Flash (última generación)
+- 📝 **Títulos automáticos** generados por IA para cada conversación
+- 🌙 **Modo oscuro completo** con auto-detección de preferencias del sistema
+- 📏 **Sidebar redimensionable** con persistencia de preferencias
+- 💾 **Múltiples conversaciones** con historial completo y navegación
+- ✏️ **Edición de mensajes** en tiempo real con reenvío automático
+- 🎨 **Interfaz optimizada** con fuentes y espaciado mejorados
+
+### 🔧 **Funcionalidades Técnicas**
+- 🗄️ **Base de datos robusta** con SQLAlchemy (SQLite por defecto)
+- 🔒 **Seguridad avanzada** con validación completa y hasheo de contraseñas
+- 📱 **Diseño responsive** optimizado para móvil y desktop
+- ⚡ **Performance optimizada** con carga asíncrona y UX fluida
+- 🛠️ **Auto-configuración inteligente** con detección de errores
+- 🎭 **Temas dinámicos** con transiciones suaves
+
+## 🆕 Últimas Actualizaciones
+
+### **v2.0 - Interfaz Avanzada (Enero 2025)**
+- ✅ **Títulos Automáticos**: La IA genera títulos descriptivos basados en el contenido de cada conversación
+- ✅ **Modo Oscuro Completo**: Implementación completa con 50+ variables CSS y auto-detección
+- ✅ **Sidebar Redimensionable**: Barra lateral ajustable con persistencia en localStorage (200px-500px)
+- ✅ **Múltiples Conversaciones**: Sistema completo de gestión con navegación entre chats
+- ✅ **Mejoras Visuales**: Optimización de fuentes, espaciado y densidad visual
+- ✅ **Correcciones Críticas**: Base de datos, tokens JWT y modelo Gemini actualizados
+
+### **Correcciones Implementadas**
+- 🔧 **Base de datos**: Configuración consistente con `flask_gemini.db`
+- 🔧 **JWT Tokens**: Manejo correcto de strings en identity
+- 🔧 **Modelo Gemini**: Actualizado de `gemini-pro` a `gemini-1.5-flash`
+- 🔧 **Frontend**: Mensajes aparecen correctamente en tiempo real
 
 ## 📷 Vista Previa
 
-### Pantalla de Autenticación
-![Login](https://via.placeholder.com/800x400/667eea/ffffff?text=Pantalla+de+Login)
+### 🌙 Modo Oscuro con Sidebar Redimensionable
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ 🌙 Modo Oscuro Activado | Gemini Chat | 🌞 Modo Claro 🚪 Salir │
+├──────────────────┬──────────────────────────────────────────────┤
+│ 💬 Conversaciones│ Usuario: ¿Cómo funciona React?              │
+│ ➕ Nueva          │ 🤖 Gemini: React es una biblioteca de...    │
+│                  │                                              │
+│ 📝 Ayuda React   │ Usuario: Dame un ejemplo práctico           │
+│ 🍳 Recetas Pasta │ 🤖 Gemini: Aquí tienes un componente...    │
+│ 🎵 Mejor Música  │                                              │
+│ ┆ ◀ Resize       │ ┌─────────────────────────────────────────┐ │
+│                  │ │ Escribe tu mensaje aquí...              │ │
+│                  │ │                                    📤 │ │
+│                  │ └─────────────────────────────────────────┘ │
+└──────────────────┴──────────────────────────────────────────────┘
+```
 
-### Interfaz de Chat
-![Chat](https://via.placeholder.com/800x400/f093fb/ffffff?text=Interfaz+de+Chat+con+Gemini)
+### ☀️ Modo Claro con Títulos Automáticos
+Los títulos se generan automáticamente basados en el contenido:
+- "¿Puedes ayudarme con Python?" → **"Ayuda con Python"**
+- "Necesito recetas fáciles" → **"Recetas fáciles"**
+- "Explícame inteligencia artificial" → **"Inteligencia Artificial: Explicación"**
 
 ## 🚀 Instalación Rápida
 
 ### Opción 1: Auto-instalación (Recomendado)
 ```bash
 # 1. Clonar el repositorio
-git clone https://github.com/tu-usuario/flask-gemini-chat.git
+git clone https://github.com/jonathanjd7/flask-gemini-chat.git
 cd flask-gemini-chat
 
 # 2. Ejecutar instalación automática
@@ -41,276 +83,354 @@ python quick_start.py
 
 ### Opción 2: Instalación Manual
 
-#### 1. **Requisitos del Sistema**
-- Python 3.8 o superior
-- pip (gestor de paquetes de Python)
-- Git (opcional)
-
-#### 2. **Clonar el Repositorio**
+#### 1. **Configuración del Entorno**
 ```bash
-git clone https://github.com/tu-usuario/flask-gemini-chat.git
-cd flask-gemini-chat
-```
-
-#### 3. **Crear Entorno Virtual**
-```bash
-# Windows
+# Crear entorno virtual
 python -m venv venv
+
+# Activar entorno (Windows)
 venv\Scripts\activate
 
-# macOS/Linux
-python3 -m venv venv
+# Activar entorno (macOS/Linux)
 source venv/bin/activate
-```
 
-#### 4. **Instalar Dependencias**
-```bash
+# Instalar dependencias
 pip install -r requirements.txt
 ```
 
-#### 5. **Configurar Variables de Entorno**
+#### 2. **Configurar Variables de Entorno**
 ```bash
-# Opción A: Script automático
+# Crear archivo .env
 python setup_env.py
-
-# Opción B: Manual - crear archivo .env
-copy .env.example .env
-# Editar .env con tus valores
 ```
 
-#### 6. **Obtener API Key de Google Gemini**
+O crear manualmente:
+```env
+# .env
+SECRET_KEY=tu_clave_secreta_super_segura
+JWT_SECRET_KEY=otra_clave_jwt_secreta
+GEMINI_API_KEY=tu_api_key_de_google_gemini
+DATABASE_URL=sqlite:///flask_gemini.db
+FLASK_ENV=development
+```
 
-**Método Recomendado - Google AI Studio:**
+#### 3. **Obtener API Key de Google Gemini**
 1. Ve a [Google AI Studio](https://makersuite.google.com/app/apikey)
 2. Inicia sesión con tu cuenta de Google
-3. Haz clic en **"Create API Key"**
-4. Copia la clave y pégala en tu archivo `.env`:
-   ```env
-   GEMINI_API_KEY=tu_api_key_aquí
-   ```
+3. Crea una nueva API Key
+4. Cópiala en tu archivo `.env`
 
-**Método Alternativo - Google Cloud Console:**
-1. Ve a [Google Cloud Console](https://console.cloud.google.com/)
-2. Crea/selecciona un proyecto
-3. Habilita la **Generative AI API**
-4. Ve a **API y servicios > Credenciales**
-5. Crea una **Clave de API**
-6. Configúrala en tu archivo `.env`
-
-#### 7. **Inicializar Base de Datos**
+#### 4. **Ejecutar la Aplicación**
 ```bash
-# Crear las tablas
-python -c "from app_basic import Base, engine; Base.metadata.create_all(engine)"
-
-# O usar el comando personalizado
-python app_basic.py create-db
+python run.py
 ```
 
-#### 8. **Ejecutar la Aplicación**
-```bash
-python app_basic.py
-```
+¡Abre **http://localhost:5000** y comienza a chatear! 🚀
 
-## 🎯 Uso del Programa
+## 🎯 Guía de Uso Completa
 
-### 1. **Acceder a la Aplicación**
-- Abre tu navegador web
-- Ve a: `http://localhost:5000`
-- Verás la pantalla de autenticación
+### 1. **Autenticación**
+- **Registro**: Email + contraseña (mín. 6 caracteres)
+- **Login**: Automático redirect al chat
+- **Seguridad**: Tokens JWT con refresh automático
 
-### 2. **Crear una Cuenta**
-- Haz clic en "Regístrate aquí"
-- Completa el formulario con tu email y contraseña
-- La contraseña debe tener mínimo 6 caracteres
+### 2. **Gestión de Conversaciones**
+- **📝 Nueva Conversación**: Botón "Nueva" en sidebar
+- **🏷️ Títulos Automáticos**: Generados por IA en el primer mensaje
+- **📂 Navegación**: Click en cualquier conversación para cambiar
+- **🗑️ Eliminar**: Botón de papelera en cada conversación
 
-### 3. **Iniciar Sesión**
-- Usa tu email y contraseña para entrar
-- El sistema te redirigirá automáticamente al chat
+### 3. **Interfaz Avanzada**
+- **🌙 Modo Oscuro**: Toggle automático, detecta preferencias del sistema
+- **📏 Sidebar Redimensionable**: Arrastra el borde derecho para ajustar (200px-500px)
+- **💾 Persistencia**: Preferencias guardadas en localStorage
+- **📱 Responsive**: Optimizado para móvil y desktop
 
-### 4. **Chatear con Gemini**
-- Escribe tu mensaje en el área de texto
-- Presiona **Enter** o haz clic en el botón de envío
-- También puedes usar **Ctrl+Enter** para enviar rápidamente
-- Gemini responderá automáticamente
+### 4. **Chat Inteligente**
+- **✏️ Edición**: Click en ✏️ para editar mensajes enviados
+- **🔄 Reenvío**: Los mensajes editados se reenvían automáticamente
+- **⌨️ Atajos**: 
+  - `Enter` → Enviar mensaje
+  - `Shift+Enter` → Nueva línea
+- **📊 Contador**: Máximo 5000 caracteres por mensaje
 
-### 5. **Funciones Adicionales**
-- **🗑️ Limpiar**: Borra el historial de chat actual
-- **🚪 Salir**: Cierra tu sesión de forma segura
-- **Contador de caracteres**: Muestra cuántos caracteres has escrito (máx. 5000)
+### 5. **Funciones del Sistema**
+- **🔄 Historial**: Todas las conversaciones se guardan automáticamente
+- **⚡ Carga Rápida**: Optimizada para performance
+- **🛡️ Seguridad**: Validación completa en frontend y backend
 
-## 📁 Estructura del Proyecto
+## 📁 Estructura del Proyecto Actualizada
 
 ```
 flask-gemini-chat/
-├── 📱 Frontend
-│   ├── templates/
-│   │   └── index.html          # Interfaz principal
-│   └── static/
-│       ├── style.css           # Estilos modernos
-│       └── app.js              # Lógica del frontend
-├── 🔧 Backend
-│   ├── app_basic.py            # Aplicación Flask principal
-│   ├── models.py               # Modelos de base de datos
-│   └── schemas.py              # Validación de datos
-├── 🛠️ Configuración
-│   ├── .env                    # Variables de entorno
-│   ├── requirements.txt        # Dependencias Python
-│   ├── setup_env.py           # Auto-configuración
-│   └── quick_start.py         # Instalación automática
-├── 🧪 Testing
-│   ├── test_api.py            # Pruebas de API
-│   └── test_models.py         # Pruebas de modelos Gemini
-└── 📖 Documentación
-    └── README.md              # Esta documentación
+├── 📱 **Frontend Optimizado**
+│   ├── app/
+│   │   ├── templates/
+│   │   │   └── index.html          # UI completa con modo oscuro
+│   │   └── static/
+│   │       ├── style.css           # 1000+ líneas de CSS optimizado
+│   │       └── app.js              # JavaScript con funciones avanzadas
+├── 🔧 **Backend Robusto**
+│   ├── app/
+│   │   ├── __init__.py             # Factory pattern Flask
+│   │   ├── config.py               # Configuración multi-entorno
+│   │   ├── models.py               # Modelos User, Conversation, Message
+│   │   ├── schemas.py              # Validación con Marshmallow
+│   │   ├── utils.py                # Utilidades compartidas
+│   │   └── routes/
+│   │       ├── auth.py             # Autenticación JWT
+│   │       └── chat.py             # Chat con títulos automáticos
+├── 🛠️ **Configuración y Scripts**
+│   ├── run.py                      # Punto de entrada principal
+│   ├── .env                        # Variables de entorno
+│   ├── requirements.txt            # Dependencias actualizadas
+│   ├── config_setup.py            # Auto-configuración inteligente
+│   └── quick_start.py             # Instalación automática
+├── 💾 **Base de Datos**
+│   └── instance/
+│       └── flask_gemini.db         # SQLite con esquema completo
+└── 📖 **Documentación**
+    └── README.md                   # Esta documentación completa
 ```
 
-## 🔌 API Endpoints
+## 🔌 API Endpoints Completa
 
-### 🔐 Autenticación
-| Método | Endpoint | Descripción | Auth |
-|--------|----------|-------------|------|
-| `POST` | `/auth/register` | Registrar nuevo usuario | ❌ |
-| `POST` | `/auth/login` | Iniciar sesión | ❌ |
+### 🔐 **Autenticación**
+| Método | Endpoint | Descripción | Request Body | Response |
+|--------|----------|-------------|--------------|----------|
+| `POST` | `/auth/register` | Registrar usuario | `{email, password}` | JWT Token |
+| `POST` | `/auth/login` | Iniciar sesión | `{email, password}` | JWT Token |
 
-### 💬 Chat
-| Método | Endpoint | Descripción | Auth |
-|--------|----------|-------------|------|
-| `POST` | `/chat/send` | Enviar mensaje a Gemini | 🔒 |
-| `GET` | `/chat/history` | Obtener historial | 🔒 |
+### 💬 **Chat y Conversaciones**
+| Método | Endpoint | Descripción | Auth | Response |
+|--------|----------|-------------|------|----------|
+| `POST` | `/chat/send_message` | Enviar mensaje + generar título automático | 🔒 | Respuesta IA |
+| `GET` | `/chat/conversations` | Listar todas las conversaciones | 🔒 | Array de conversaciones |
+| `POST` | `/chat/conversations` | Crear nueva conversación | 🔒 | Nueva conversación |
+| `GET` | `/chat/conversations/<id>` | Obtener conversación específica | 🔒 | Conversación + mensajes |
+| `DELETE` | `/chat/conversations/<id>` | Eliminar conversación | 🔒 | Status |
+| `PUT` | `/chat/messages/<id>` | Editar mensaje | 🔒 | Mensaje actualizado |
 
-### ℹ️ Sistema
-| Método | Endpoint | Descripción | Auth |
-|--------|----------|-------------|------|
-| `GET` | `/api/status` | Estado del sistema | ❌ |
-| `GET` | `/api/models` | Modelos de Gemini disponibles | ❌ |
+## 🎨 Funcionalidades Visuales Avanzadas
 
-## 🔧 Configuración Avanzada
+### **🌙 Sistema de Temas**
+```css
+/* Variables CSS dinámicas para modo claro/oscuro */
+:root {
+  --primary-color: #667eea;
+  --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  /* +50 variables más... */
+}
 
-### Variables de Entorno (.env)
-```env
-# === CONFIGURACIÓN BÁSICA ===
-FLASK_APP=app_basic.py
-FLASK_ENV=development
-
-# === SEGURIDAD ===
-SECRET_KEY=tu_clave_secreta_flask
-JWT_SECRET_KEY=tu_clave_jwt
-
-# === BASE DE DATOS ===
-# SQLite (por defecto)
-DATABASE_URL=sqlite:///chat.db
-
-# PostgreSQL (producción)
-# DATABASE_URL=postgresql://user:pass@localhost/dbname
-
-# === GOOGLE GEMINI ===
-GEMINI_API_KEY=tu_api_key_gemini
-
-# === CORS (frontend) ===
-CORS_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
+[data-theme="dark"] {
+  --primary-color: #818cf8;
+  --bg-gradient: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  /* Paleta completa para modo oscuro */
+}
 ```
 
-### Modelos de Gemini Disponibles
-El sistema automáticamente detecta y usa el mejor modelo disponible:
-1. **gemini-1.5-flash** (rápido y eficiente)
-2. **gemini-1.5-pro** (más potente)
-3. **gemini-1.0-pro** (fallback)
+### **📏 Sidebar Redimensionable**
+- **Rango**: 200px - 500px
+- **Persistencia**: LocalStorage
+- **Responsive**: Se oculta en móvil
+- **Indicador visual**: Handle azul al hover
 
-## 🧪 Pruebas y Verificación
+### **🎯 Optimizaciones Visuales**
+- **Fuentes optimizadas**: Reducidas para mejor densidad
+- **Espaciado inteligente**: Más contenido sin perder legibilidad
+- **Avatares compactos**: 36px en lugar de 40px
+- **Line-height**: Optimizado a 1.4 para mejor aprovechamiento
 
-### Ejecutar Pruebas Completas
+## 🧪 Testing y Verificación
+
+### **Scripts de Prueba Disponibles**
 ```bash
-# Verificar que Flask esté funcionando
-python test_api.py
+# Probar autenticación completa
+python test_auth.py
 
-# Probar modelos de Gemini
-python test_models.py
+# Probar flujo de chat con títulos automáticos
+python test_chat_flow.py
+
+# Verificar funcionalidad de títulos automáticos
+python test_auto_titles.py
+
+# Probar sidebar redimensionable
+python test_resize_feature.py
+
+# Verificar modo oscuro
+python test_dark_mode.py
 ```
 
-### Verificar Estado del Sistema
+### **Verificación Manual**
+1. **Títulos automáticos**: Envía un mensaje y verifica que se genere título
+2. **Modo oscuro**: Toggle entre temas y verifica persistencia
+3. **Sidebar**: Redimensiona y recarga página para verificar persistencia
+4. **Conversaciones**: Crea múltiples chats y navega entre ellos
+
+## 🐛 Solución de Problemas Actualizados
+
+### **Problemas Corregidos Automáticamente**
+- ✅ **Error "no such table: users"**: Configuración de BD corregida
+- ✅ **JWT Subject error**: Manejo de strings implementado
+- ✅ **Gemini model 404**: Actualizado a gemini-1.5-flash
+- ✅ **Mensajes no aparecen**: Frontend corregido para mostrar contenido
+
+### **Si encuentras problemas nuevos:**
+
+#### **Base de datos corrupta**
 ```bash
-# Hacer petición al endpoint de status
-curl http://localhost:5000/api/status
-
-# Ver modelos disponibles
-curl http://localhost:5000/api/models
+# Recrear BD con nuevo esquema
+python -c "
+from app import create_app, db
+app = create_app()
+with app.app_context():
+    db.drop_all()
+    db.create_all()
+    print('Base de datos recreada exitosamente')
+"
 ```
 
-## 🐛 Solución de Problemas
-
-### Problema: "Error 404 models/gemini-pro is not found"
-**Solución:** Ya corregido en la versión actual. El sistema usa automáticamente los modelos más recientes de Gemini.
-
-### Problema: Error de conexión a la base de datos
-**Solución:**
-```bash
-# Recrear la base de datos
-python -c "from app_basic import Base, engine; Base.metadata.drop_all(engine); Base.metadata.create_all(engine)"
+#### **Preferencias UI corruptas**
+```javascript
+// En consola del navegador
+localStorage.removeItem('sidebar_width');
+localStorage.removeItem('theme');
+location.reload();
 ```
 
-### Problema: Token JWT expirado
-**Solución:** El frontend maneja automáticamente la renovación de tokens. Si persiste, cierra sesión y vuelve a entrar.
-
-### Problema: API Key de Gemini inválida
-**Solución:**
-1. Verifica que la API Key esté correcta en el archivo `.env`
-2. Asegúrate de que no haya espacios extra
-3. Verifica que la API Key esté activa en Google AI Studio
-
-### Problema: Puerto 5000 ocupado
-**Solución:**
-```bash
-# Windows
-netstat -ano | findstr :5000
-taskkill /PID [número_proceso] /F
-
-# macOS/Linux
-lsof -ti:5000 | xargs kill -9
-```
+#### **API Key inválida**
+1. Verifica en [Google AI Studio](https://makersuite.google.com/app/apikey)
+2. Regenera la key si es necesario
+3. Actualiza `.env` sin espacios extra
 
 ## 🚀 Despliegue en Producción
 
-### Variables de Entorno para Producción
+### **Variables para Producción**
 ```env
 FLASK_ENV=production
-SECRET_KEY=clave_super_segura_generada_aleatoriamente
-JWT_SECRET_KEY=otra_clave_super_segura
+SECRET_KEY=clave_ultra_segura_generada_aleatoriamente_64_chars
+JWT_SECRET_KEY=otra_clave_ultra_segura_diferente_64_chars
 DATABASE_URL=postgresql://user:pass@host:5432/production_db
+GEMINI_API_KEY=tu_api_key_produccion
 ```
 
-### Usando Gunicorn
-```bash
-pip install gunicorn
-gunicorn -w 4 -b 0.0.0.0:8000 app_basic:app
+### **Con Docker**
+```dockerfile
+FROM python:3.9-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY . .
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:8000", "run:app"]
 ```
+
+### **Con Railway/Render/Heroku**
+```bash
+# Procfile
+web: gunicorn -w 4 -b 0.0.0.0:$PORT run:app
+```
+
+## 💡 Funcionalidades Futuras Planeadas
+
+- [ ] 📁 **Subida de archivos** e imágenes al chat
+- [ ] 🔍 **Búsqueda avanzada** en el historial
+- [ ] 📊 **Estadísticas de uso** y analytics
+- [ ] 🌐 **Internacionalización** (i18n) multiidioma
+- [ ] 🔔 **Notificaciones push** para respuestas
+- [ ] 📱 **PWA** (Progressive Web App)
+- [ ] 🤖 **Múltiples modelos IA** (GPT, Claude, etc.)
+- [ ] 👥 **Chat grupal** y colaborativo
 
 ## 🤝 Contribuciones
 
-¡Las contribuciones son bienvenidas! Por favor:
+¡Las contribuciones son muy bienvenidas! Especialmente en:
 
+### **🎯 Áreas Prioritarias**
+- 🎨 **UI/UX**: Mejoras en diseño y experiencia
+- 🔧 **Performance**: Optimizaciones de velocidad
+- 🐛 **Bug fixes**: Corrección de errores
+- 📱 **Mobile**: Mejoras en responsive
+- 🧪 **Testing**: Más casos de prueba
+
+### **📋 Proceso de Contribución**
 1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/nueva-caracteristica`)
-3. Commit tus cambios (`git commit -am 'Agregar nueva característica'`)
-4. Push a la rama (`git push origin feature/nueva-caracteristica`)
-5. Abre un Pull Request
+2. Crea una rama: `git checkout -b feature/nueva-caracteristica`
+3. Commit: `git commit -am 'Agregar: nueva característica increíble'`
+4. Push: `git push origin feature/nueva-caracteristica`
+5. Abre un Pull Request con descripción detallada
+
+## 📈 Changelog
+
+### **v2.0.0 - Interfaz Avanzada (Enero 2025)**
+- ➕ Títulos automáticos generados por IA
+- ➕ Modo oscuro completo con 50+ variables CSS
+- ➕ Sidebar redimensionable (200px-500px)
+- ➕ Sistema de múltiples conversaciones
+- ➕ Edición de mensajes en tiempo real
+- ➕ Optimizaciones visuales y de performance
+- 🔧 Corrección de base de datos y JWT
+- 🔧 Actualización a Gemini 1.5-Flash
+
+### **v1.0.0 - Versión Base**
+- ➕ Chat básico con Gemini
+- ➕ Autenticación JWT
+- ➕ Interfaz web responsive
 
 ## 📝 Licencia
 
-Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
+Este proyecto está bajo la **Licencia MIT**. Ver archivo `LICENSE` para detalles completos.
 
-## 👨‍💻 Autor
+## 👨‍💻 Desarrollador
 
-**Tu Nombre**
-- GitHub: jonathanjd7 (https://github.com/jonathanjd7)
-- Email: jonathanjd7@gmail.com
+**Jonathan JD**
+- 🐙 **GitHub**: [jonathanjd7](https://github.com/jonathanjd7)
+- 📧 **Email**: jonathanjd7@gmail.com
+- 💼 **LinkedIn**: [Jonathan JD](https://linkedin.com/in/jonathanjd)
 
-## 🙏 Agradecimientos
+## 🙏 Agradecimientos y Tecnologías
 
-- [Google Gemini AI](https://ai.google.dev/) por la API de inteligencia artificial
-- [Flask](https://flask.palletsprojects.com/) por el framework web
-- [SQLAlchemy](https://www.sqlalchemy.org/) por el ORM
-- Comunidad open source por las librerías utilizadas
+### **🤖 IA y APIs**
+- [Google Gemini AI](https://ai.google.dev/) - Por la API de inteligencia artificial
+- [Google AI Studio](https://makersuite.google.com/) - Por las herramientas de desarrollo
+
+### **🔧 Backend**
+- [Flask](https://flask.palletsprojects.com/) - Framework web minimalista
+- [SQLAlchemy](https://www.sqlalchemy.org/) - ORM potente y flexible
+- [Flask-JWT-Extended](https://flask-jwt-extended.readthedocs.io/) - Manejo de tokens JWT
+- [Marshmallow](https://marshmallow.readthedocs.io/) - Serialización y validación
+
+### **🎨 Frontend**
+- [Vanilla JavaScript](https://developer.mozilla.org/) - Sin frameworks, máximo rendimiento
+- [CSS Grid & Flexbox](https://css-tricks.com/) - Layout moderno
+- [CSS Custom Properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*) - Temas dinámicos
+
+### **🛠️ Herramientas de Desarrollo**
+- [Python 3.9+](https://python.org/) - Lenguaje base
+- [Git](https://git-scm.com/) - Control de versiones
+- [SQLite](https://sqlite.org/) - Base de datos embebida
 
 ---
 
-⭐ **Si este proyecto te resultó útil, ¡dale una estrella en GitHub!** ⭐ 
+## ⭐ ¿Te Gustó el Proyecto?
+
+Si **Flask Gemini Chat** te resultó útil o interesante:
+
+1. 🌟 **Dale una estrella** en GitHub
+2. 🍴 **Fork** el proyecto para tus propias modificaciones
+3. 📢 **Comparte** con otros desarrolladores
+4. 🐛 **Reporta bugs** o sugiere mejoras
+5. 🤝 **Contribuye** con código o documentación
+
+### **📊 Estadísticas del Proyecto**
+- 📝 **Líneas de código**: ~3,000+
+- 🎨 **Líneas de CSS**: ~1,000+
+- ⚡ **Funcionalidades**: 15+ características principales
+- 🧪 **Tests**: Cobertura completa de funcionalidades críticas
+
+---
+
+**🚀 ¡Empezar es súper fácil! Solo ejecuta `python quick_start.py` y comienza a chatear con IA en menos de 5 minutos!**
+
+---
+
+*Última actualización: Enero 2025 | Versión: 2.0.0 Advanced*
