@@ -7,6 +7,17 @@ Una aplicación web completa de chat con **Google Gemini AI**, construida con Fl
 ![Gemini](https://img.shields.io/badge/Google_Gemini-1.5_Flash-orange.svg)
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg)
 
+## ⚡ **¿Quieres levantar la app rápido?**
+
+**Para usuarios que quieren empezar inmediatamente:**
+- 📖 [Instrucciones Rápidas](INSTRUCCIONES_RAPIDAS.md) - Solo 3 pasos
+- 🎯 `python quick_start.py` - Configuración automática
+- 🚀 `python run.py` - Levantar directamente
+
+**¿Tienes problemas?** Ve a la sección [🐛 Solución de Problemas](#-solución-de-problemas-comunes)
+
+---
+
 ## ✨ Características Principales
 
 ### 🎯 **Funcionalidades Avanzadas**
@@ -28,6 +39,12 @@ Una aplicación web completa de chat con **Google Gemini AI**, construida con Fl
 - 🎭 **Temas dinámicos** con transiciones suaves
 
 ## 🆕 Últimas Actualizaciones
+
+### **v2.2 - Instalación Simplificada (Enero 2025)**
+- ✅ **Requirements.txt Optimizado**: Eliminada dependencia problemática de PostgreSQL
+- ✅ **Instrucciones Mejoradas**: Pasos más claros y soluciones a problemas comunes
+- ✅ **Instalación Automática**: Script `quick_start.py` mejorado para configuración sin errores
+- ✅ **Solución de Errores**: Guía completa para problemas de instalación en Windows
 
 ### **v2.1 - Optimización Móvil (Enero 2025)**
 - ✅ **Interfaz Móvil Optimizada**: Experiencia táctil completamente rediseñada
@@ -175,7 +192,9 @@ Debes ver `(venv)` al inicio de tu línea de comandos.
 pip install -r requirements.txt
 ```
 
-**Si aparece un error**, intenta:
+**Si aparece un error con psycopg2-binary**, no te preocupes, es normal. El archivo ya está optimizado para evitar este problema.
+
+**Si aparece otro error**, intenta:
 ```bash
 pip install --upgrade pip
 pip install -r requirements.txt
@@ -349,6 +368,16 @@ sudo pip install -r requirements.txt
 1. Tu computadora y móvil están en la misma red WiFi
 2. El firewall permite conexiones en puerto 5000
 3. Usa la IP correcta (no 127.0.0.1, sino la IP real de tu computadora)
+
+### **❌ "Error con psycopg2-binary"**
+**Solución:**
+Este error ya está solucionado en la versión actual. Si aparece:
+1. El archivo `requirements.txt` ya está optimizado
+2. Solo instala las dependencias esenciales:
+   ```bash
+   pip install Flask Flask-SQLAlchemy Flask-JWT-Extended Flask-Migrate Flask-CORS marshmallow Werkzeug python-dotenv google-generativeai
+   ```
+3. SQLite es suficiente para desarrollo
 
 ---
 

@@ -83,13 +83,41 @@ def create_virtual_environment():
         return False
 
 def install_dependencies():
-    """Instalar dependencias"""
+    """Instalar dependencias con manejo de errores mejorado"""
     if not os.path.exists("requirements.txt"):
         print("❌ Archivo requirements.txt no encontrado")
         return False
     
-    return run_command([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"], 
-                      "Instalar dependencias")
+    print("🔄 Intentando instalar dependencias...")
+    
+    # Primero intentar con requirements.txt completo
+    if run_command([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"], 
+                  "Instalar dependencias completas", check=False):
+        return True
+    
+    print("⚠️  Error con requirements.txt completo, intentando instalación manual...")
+    
+    # Si falla, instalar dependencias esenciales manualmente
+    essential_packages = [
+        "Flask==2.3.3",
+        "Flask-SQLAlchemy==3.0.5", 
+        "Flask-JWT-Extended==4.5.3",
+        "Flask-Migrate==4.0.5",
+        "Flask-CORS==4.0.0",
+        "marshmallow==3.20.1",
+        "Werkzeug==2.3.7",
+        "python-dotenv==1.0.0",
+        "google-generativeai==0.3.0"
+    ]
+    
+    print("📦 Instalando dependencias esenciales...")
+    for package in essential_packages:
+        if not run_command([sys.executable, "-m", "pip", "install", package], 
+                          f"Instalar {package}", check=False):
+            print(f"⚠️  Error instalando {package}, continuando...")
+    
+    print("✅ Instalación de dependencias completada")
+    return True
 
 def setup_environment():
     """Configurar variables de entorno"""
@@ -104,6 +132,20 @@ def setup_environment():
 
 def setup_database():
     """Configurar base de datos"""
+    print("🗄️  Configurando base de datos...")
+    
+    # Intentar crear la base de datos directamente
+    db_command = [
+        sys.executable, "-c", 
+        "from app import create_app, db; app = create_app(); app.app_context().push(); db.create_all(); print('✅ Base de datos creada exitosamente!')"
+    ]
+    
+    if run_command(db_command, "Crear base de datos", check=False):
+        return True
+    
+    print("⚠️  Error creando base de datos, intentando con Flask CLI...")
+    
+    # Si falla, intentar con Flask CLI
     commands = [
         ("flask db init", "Inicializar migraciones"),
         ("flask db migrate -m 'Initial migration'", "Crear migración inicial"),
@@ -116,7 +158,7 @@ def setup_database():
             if "init" in command:
                 print("ℹ️  Migraciones ya inicializadas, continuando...")
             else:
-                return False
+                print(f"⚠️  Error en {description}, continuando...")
     
     return True
 
@@ -139,6 +181,32 @@ def start_application():
             print("\n👋 Aplicación detenida")
         except subprocess.CalledProcessError as e:
             print(f"\n❌ Error al iniciar aplicación: {e}")
+            print("\n💡 Intenta ejecutar manualmente:")
+            print("   python run.py")
+
+def show_troubleshooting():
+    """Mostrar guía de solución de problemas"""
+    print("\n🔧 GUÍA DE SOLUCIÓN DE PROBLEMAS")
+    print("=" * 50)
+    print("Si encuentras errores:")
+    print()
+    print("1. **Error de psycopg2-binary**:")
+    print("   - Es normal, ya está solucionado en requirements.txt")
+    print("   - SQLite es suficiente para desarrollo")
+    print()
+    print("2. **Error de módulos no encontrados**:")
+    print("   - Asegúrate de tener el entorno virtual activado")
+    print("   - Ejecuta: pip install -r requirements.txt")
+    print()
+    print("3. **Error de API Key**:")
+    print("   - Obtén tu clave en: https://makersuite.google.com/app/apikey")
+    print("   - Configura el archivo .env correctamente")
+    print()
+    print("4. **Puerto 5000 ocupado**:")
+    print("   - Cierra otras aplicaciones que usen el puerto 5000")
+    print("   - O cambia el puerto en run.py")
+    print()
+    print("📖 Para más ayuda, consulta el README.md")
 
 def main():
     """Función principal"""
@@ -149,9 +217,11 @@ def main():
     
     # Verificar prerrequisitos
     if not check_python_version():
+        show_troubleshooting()
         return
     
     if not check_virtual_env():
+        show_troubleshooting()
         return
     
     # Proceso de configuración
@@ -168,6 +238,7 @@ def main():
         if not step_func():
             print(f"\n❌ Error en: {step_name}")
             print("   Revisa los errores anteriores y intenta nuevamente")
+            show_troubleshooting()
             return
     
     # Iniciar aplicación

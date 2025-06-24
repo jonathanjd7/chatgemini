@@ -8,4 +8,4 @@ Werkzeug==2.3.7
 python-dotenv==1.0.0
 google-generativeai==0.3.0
 gunicorn==21.2.0
-psycopg2-binary==2.9.7 
+# psycopg2-binary==2.9.7  # Comentado: Solo necesario para PostgreSQL 
