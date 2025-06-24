@@ -499,7 +499,7 @@ body {
 }
 
 [data-theme="dark"] #theme-toggle .theme-text::before {
-    content: "Modo Claro";
+    content: " Modo Claro";
 }
 
 [data-theme="dark"] #theme-toggle .theme-text {
@@ -896,104 +896,537 @@ body {
     }
 }
 
-/* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
-    .auth-container {
-        padding: 1.25rem;
-        margin: 1rem;
-    }
-    
-    .chat-header {
-        padding: 0.75rem;
-        flex-direction: column;
-        gap: 0.75rem;
-        align-items: stretch;
-    }
-    
-    .header-actions {
-        justify-content: center;
+
+
+/* ===== RESPONSIVE MEJORADO ===== */
+
+/* Tablet y pantallas medianas */
+@media (max-width: 1024px) {
+    .conversations-sidebar {
+        width: 280px;
+        min-width: 180px;
     }
     
     .message-content {
-        max-width: 85%;
-        font-size: 0.85rem;
+        max-width: 75%;
+        font-size: 0.95rem;
     }
-    
-    .chat-input-area {
-        padding: 0.75rem;
-    }
-    
-    .input-info {
-        flex-direction: column;
-        gap: 0.2rem;
-        align-items: flex-start;
-    }
-    
-    /* Edición de mensajes en móvil */
-    .edit-actions {
-        flex-direction: column;
-        gap: 0.4rem;
-    }
-    
-    .save-btn, .cancel-btn, .resend-btn {
-        width: 100%;
-        padding: 0.6rem;
-        font-size: 0.9rem;
-    }
-    
+}
+
+/* Dispositivos móviles grandes */
+@media (max-width: 768px) {
+    /* ===== ESTRUCTURA GENERAL ===== */
     .chat-panel {
         flex-direction: column;
+        height: 100vh;
     }
     
     .conversations-sidebar {
         width: 100%;
-        height: 200px;
+        height: 160px;
         border-right: none;
         border-bottom: 1px solid var(--border-color);
         min-width: unset;
         max-width: unset;
+        order: 1;
     }
     
-    /* Ocultar handle en móvil */
+    .chat-main {
+        flex: 1;
+        min-height: 0;
+        order: 2;
+    }
+    
+    /* Ocultar handle de redimensionamiento en móvil */
     .resize-handle {
         display: none;
     }
     
-    /* Ajustes para modo oscuro en móvil */
-    .conversations-sidebar {
-        background: var(--sidebar-bg) !important;
+    /* ===== SIDEBAR MÓVIL ===== */
+    .sidebar-header {
+        padding: 0.75rem 1rem;
+        background: var(--sidebar-header-bg);
+    }
+    
+    .sidebar-header h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+    
+    .btn-new-conversation {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+        border-radius: 8px;
     }
     
     .conversations-list {
         display: flex;
         overflow-x: auto;
         overflow-y: hidden;
-        padding: 0.5rem;
+        padding: 0.75rem;
+        gap: 0.75rem;
+        -webkit-overflow-scrolling: touch;
     }
     
     .conversation-item {
-        min-width: 200px;
-        margin-right: 0.5rem;
+        min-width: 220px;
+        max-width: 280px;
+        margin-right: 0;
         margin-bottom: 0;
+        padding: 0.8rem;
+        border-radius: 10px;
+        flex-shrink: 0;
     }
     
-    .chat-main {
-        flex: 1;
-        min-height: 0;
+    .conversation-title {
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
-}
-
-@media (max-width: 480px) {
-    .auth-header h1 {
-        font-size: 1.3rem;
+    
+    .conversation-date {
+        font-size: 0.75rem;
+        opacity: 0.8;
+    }
+    
+    /* ===== HEADER MÓVIL ===== */
+    .chat-header {
+        padding: 1rem;
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: stretch;
+        background: var(--surface-color);
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .header-info {
+        text-align: center;
+    }
+    
+    .header-info h1 {
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+    }
+    
+    .user-info {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+    }
+    
+    .header-actions {
+        display: flex;
+        justify-content: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+    
+    .btn-secondary {
+        padding: 0.7rem 1.2rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+        border-radius: 8px;
+        min-width: 100px;
+        text-align: center;
+        border: 1.5px solid var(--border-color);
+    }
+    
+    .btn-secondary:active {
+        transform: scale(0.98);
+    }
+    
+    /* ===== MENSAJES MÓVIL ===== */
+    .chat-messages {
+        padding: 1rem;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .message-container {
+        margin-bottom: 1.2rem;
+        gap: 0.75rem;
+    }
+    
+    .bot-avatar, .user-avatar {
+        width: 42px;
+        height: 42px;
+        font-size: 1.2rem;
+        flex-shrink: 0;
     }
     
     .message-content {
-        max-width: 90%;
+        max-width: 85%;
+        padding: 1rem 1.2rem;
+        border-radius: 16px;
+        font-size: 1rem;
+        line-height: 1.5;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+    
+    .message-content p {
+        margin-bottom: 0.6rem;
+    }
+    
+    .message-timestamp {
+        font-size: 0.75rem;
+        margin-top: 0.4rem;
+        opacity: 0.8;
+    }
+    
+    /* ===== ACCIONES DE MENSAJE MÓVIL ===== */
+    .message-actions {
+        opacity: 1; /* Siempre visible en móvil */
+        margin-top: 0.6rem;
+        gap: 0.5rem;
+    }
+    
+    .edit-btn {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.85rem;
+        border-radius: 6px;
+        background: rgba(0, 0, 0, 0.05);
+        opacity: 0.8;
+        min-height: 32px;
+    }
+    
+    .edit-btn:active {
+        transform: scale(0.95);
+    }
+    
+    /* ===== EDICIÓN DE MENSAJES MÓVIL ===== */
+    .edit-container {
+        margin-top: 0.75rem;
+    }
+    
+    .edit-textarea {
+        min-height: 80px;
+        padding: 0.8rem;
+        font-size: 1rem;
+        border-radius: 8px;
+        border: 2px solid var(--border-color);
+        line-height: 1.4;
+    }
+    
+    .edit-actions {
+        flex-direction: column;
+        gap: 0.6rem;
+        margin-top: 0.75rem;
+    }
+    
+    .save-btn, .cancel-btn, .resend-btn {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        font-size: 1rem;
+        font-weight: 600;
+        border-radius: 8px;
+        min-height: 48px;
+    }
+    
+    .save-btn:active, .cancel-btn:active, .resend-btn:active {
+        transform: scale(0.98);
+    }
+    
+    /* ===== ÁREA DE INPUT MÓVIL ===== */
+    .chat-input-area {
+        padding: 1rem;
+        background: var(--surface-color);
+        border-top: 1px solid var(--border-color);
+    }
+    
+    .input-container {
+        gap: 0.75rem;
+        align-items: flex-end;
+    }
+    
+    #message-input {
+        flex: 1;
+        padding: 0.8rem 1rem;
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        font-size: 1rem;
+        min-height: 48px;
+        max-height: 120px;
+        line-height: 1.4;
+    }
+    
+    #message-input:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+    }
+    
+    .send-button {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        font-size: 1.3rem;
+        flex-shrink: 0;
+    }
+    
+    .send-button:active {
+        transform: scale(0.95);
+    }
+    
+    .input-info {
+        margin-top: 0.6rem;
+        flex-direction: column;
+        gap: 0.3rem;
+        align-items: flex-start;
         font-size: 0.8rem;
+    }
+    
+    /* ===== TYPING INDICATOR MÓVIL ===== */
+    .typing-indicator {
+        padding: 1rem;
+        gap: 0.75rem;
+    }
+    
+    .typing-dots {
+        padding: 0.8rem 1rem;
+    }
+    
+    .typing-text {
+        font-size: 0.9rem;
+    }
+    
+    /* ===== NOTIFICACIONES MÓVIL ===== */
+    .chat-notification {
+        left: 1rem;
+        right: 1rem;
+        padding: 1rem;
+        font-size: 0.95rem;
+        border-radius: 8px;
+    }
+    
+    /* ===== AUTENTICACIÓN MÓVIL ===== */
+    .auth-container {
+        padding: 1.5rem;
+        margin: 1rem;
+        border-radius: 12px;
+    }
+    
+    .auth-header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .form-group input {
+        padding: 0.8rem;
+        font-size: 1rem;
+        border-radius: 8px;
+    }
+    
+    .btn-primary {
+        padding: 0.8rem;
+        font-size: 1rem;
+        border-radius: 8px;
+    }
+}
+
+/* Dispositivos móviles pequeños */
+@media (max-width: 480px) {
+    /* ===== AJUSTES PARA PANTALLAS PEQUEÑAS ===== */
+    .conversations-sidebar {
+        height: 140px;
+    }
+    
+    .conversation-item {
+        min-width: 180px;
+        max-width: 220px;
+        padding: 0.7rem;
+    }
+    
+    .conversation-title {
+        font-size: 0.9rem;
+    }
+    
+    .conversation-date {
+        font-size: 0.7rem;
+    }
+    
+    .chat-header {
+        padding: 0.8rem;
+    }
+    
+    .header-info h1 {
+        font-size: 1.2rem;
+    }
+    
+    .user-info {
+        font-size: 0.8rem;
+    }
+    
+    .header-actions {
+        gap: 0.5rem;
+    }
+    
+    .btn-secondary {
+        padding: 0.6rem 1rem;
+        font-size: 0.85rem;
+        min-width: 80px;
+    }
+    
+    .chat-messages {
+        padding: 0.8rem;
+    }
+    
+    .message-container {
+        margin-bottom: 1rem;
+        gap: 0.6rem;
+    }
+    
+    .bot-avatar, .user-avatar {
+        width: 38px;
+        height: 38px;
+        font-size: 1.1rem;
+    }
+    
+    .message-content {
+        max-width: 88%;
+        padding: 0.8rem 1rem;
+        border-radius: 14px;
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+    
+    .message-content p {
+        margin-bottom: 0.5rem;
+    }
+    
+    .chat-input-area {
+        padding: 0.8rem;
+    }
+    
+    .input-container {
+        gap: 0.6rem;
+    }
+    
+    #message-input {
+        padding: 0.7rem 0.9rem;
+        font-size: 0.95rem;
+        min-height: 44px;
+        border-radius: 10px;
+    }
+    
+    .send-button {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        font-size: 1.2rem;
+    }
+    
+    .input-info {
+        margin-top: 0.5rem;
+        font-size: 0.75rem;
+    }
+    
+    /* ===== AUTENTICACIÓN PANTALLAS PEQUEÑAS ===== */
+    .auth-container {
+        padding: 1.2rem;
+        margin: 0.8rem;
+    }
+    
+    .auth-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .auth-header p {
+        font-size: 0.85rem;
+    }
+    
+    .form-group input {
+        padding: 0.7rem;
+        font-size: 0.95rem;
+    }
+    
+    .btn-primary {
+        padding: 0.7rem;
+        font-size: 0.95rem;
+    }
+}
+
+/* Dispositivos móviles muy pequeños */
+@media (max-width: 360px) {
+    .conversations-sidebar {
+        height: 120px;
+    }
+    
+    .conversation-item {
+        min-width: 160px;
+        max-width: 200px;
+        padding: 0.6rem;
+    }
+    
+    .conversation-title {
+        font-size: 0.85rem;
     }
     
     .header-info h1 {
         font-size: 1.1rem;
+    }
+    
+    .message-content {
+        max-width: 90%;
+        padding: 0.7rem 0.9rem;
+        font-size: 0.9rem;
+    }
+    
+    .bot-avatar, .user-avatar {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+    }
+    
+    #message-input {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.9rem;
+        min-height: 42px;
+    }
+    
+    .send-button {
+        width: 42px;
+        height: 42px;
+        font-size: 1.1rem;
+    }
+}
+
+/* Mejoras de accesibilidad táctil */
+@media (hover: none) and (pointer: coarse) {
+    /* Dispositivos táctiles */
+    .btn-secondary,
+    .btn-primary,
+    .send-button,
+    .edit-btn,
+    .save-btn,
+    .cancel-btn,
+    .resend-btn {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    .conversation-item {
+        min-height: 60px;
+    }
+    
+    /* Eliminar efectos hover en dispositivos táctiles */
+    .btn-secondary:hover,
+    .btn-primary:hover,
+    .send-button:hover,
+    .edit-btn:hover,
+    .conversation-item:hover {
+        transform: none;
+    }
+    
+    /* Efectos de toque más evidentes */
+    .btn-secondary:active,
+    .btn-primary:active,
+    .send-button:active,
+    .edit-btn:active,
+    .conversation-item:active {
+        transform: scale(0.96);
+        opacity: 0.8;
     }
 } 
